@@ -21,6 +21,7 @@ const (
 )
 
 type ResultCallbackFn func(ctx context.Context, params *graphql.Params, result *graphql.Result, responseBody []byte)
+type ResultModifireFn func(ctx context.Context, params *graphql.Params, result *graphql.Result)
 
 type Handler struct {
 	Schema           *graphql.Schema
@@ -29,6 +30,7 @@ type Handler struct {
 	playground       bool
 	rootObjectFn     RootObjectFn
 	resultCallbackFn ResultCallbackFn
+	resultModifireFn ResultModifireFn
 	formatErrorFn    func(err error) gqlerrors.FormattedError
 }
 
@@ -169,6 +171,10 @@ func (h *Handler) ContextHandler(ctx context.Context, w http.ResponseWriter, r *
 
 	// use proper JSON Header
 	w.Header().Add("Content-Type", "application/json; charset=utf-8")
+
+	if h.resultModifireFn != nil {
+		h.resultModifireFn(ctx, &params, result)
+	}
 
 	var buff []byte
 	if h.pretty {
