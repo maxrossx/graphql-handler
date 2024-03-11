@@ -209,6 +209,7 @@ type Config struct {
 	Playground       bool
 	RootObjectFn     RootObjectFn
 	ResultCallbackFn ResultCallbackFn
+	ResultModifireFn ResultModifireFn
 	FormatErrorFn    func(err error) gqlerrors.FormattedError
 }
 
@@ -237,6 +238,7 @@ func New(p *Config) *Handler {
 		playground:       p.Playground,
 		rootObjectFn:     p.RootObjectFn,
 		resultCallbackFn: p.ResultCallbackFn,
+		resultModifireFn: p.ResultModifireFn,
 		formatErrorFn:    p.FormatErrorFn,
 	}
 }
